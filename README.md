@@ -31,4 +31,4 @@ https://code.google.com/archive/p/rogomatic/
 
   I am not working on Rogue much the past few years but the code is still being downloaded enough from my website that it should have a more public home.
 
-  I have not yet applied all my changes to the master branch and I am not sure when I might do that.  Instead I will create next-<version> branches as I get time.  The most recent I have pushed.  My website http://www.anthive.com/project/rogue/ has the most recent version and a few back from the current one (5.4.4-ant-1.1.4) for download as tar.gz files.
+  I have not yet applied all my changes to the master branch and I am not sure when I might do that.  Instead I will create next-version branches as I get time.  The most recent I have pushed.  My website http://www.anthive.com/project/rogue/ has the most recent version and a few back from the current one (5.4.4-ant-1.1.4) for download as tar.gz files.
