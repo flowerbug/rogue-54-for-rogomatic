@@ -26,14 +26,17 @@ int total = 0;			/* total dynamic memory bytes */
 void
 _detach(THING **list, THING *item)
 {
-    if (*list == item)
-	*list = next(item);
-    if (prev(item) != NULL)
-	item->l_prev->l_next = next(item);
-    if (next(item) != NULL)
-	item->l_next->l_prev = prev(item);
-    item->l_next = NULL;
-    item->l_prev = NULL;
+  if (*list == item)
+    *list = next(item);
+
+  if (prev(item) != NULL)
+    item->l_prev->l_next = next(item);
+
+  if (next(item) != NULL)
+    item->l_next->l_prev = prev(item);
+
+  item->l_next = NULL;
+  item->l_prev = NULL;
 }
 
 /*
@@ -44,18 +47,17 @@ _detach(THING **list, THING *item)
 void
 _attach(THING **list, THING *item)
 {
-    if (*list != NULL)
-    {
-	item->l_next = *list;
-	(*list)->l_prev = item;
-	item->l_prev = NULL;
-    }
-    else
-    {
-	item->l_next = NULL;
-	item->l_prev = NULL;
-    }
-    *list = item;
+  if (*list != NULL) {
+    item->l_next = *list;
+    (*list)->l_prev = item;
+    item->l_prev = NULL;
+  }
+  else {
+    item->l_next = NULL;
+    item->l_prev = NULL;
+  }
+
+  *list = item;
 }
 
 /*
@@ -66,14 +68,13 @@ _attach(THING **list, THING *item)
 void
 _free_list(THING **ptr)
 {
-    THING *item;
+  THING *item;
 
-    while (*ptr != NULL)
-    {
-	item = *ptr;
-	*ptr = next(item);
-	discard(item);
-    }
+  while (*ptr != NULL) {
+    item = *ptr;
+    *ptr = next(item);
+    discard(item);
+  }
 }
 
 /*
@@ -85,9 +86,9 @@ void
 discard(THING *item)
 {
 #ifdef MASTER
-    total--;
+  total--;
 #endif
-    free((char *) item);
+  free((char *) item);
 }
 
 /*
@@ -97,17 +98,19 @@ discard(THING *item)
 THING *
 new_item()
 {
-    THING *item;
+  THING *item;
 
 #ifdef MASTER
-    if ((item = calloc(1, sizeof *item)) == NULL)
-	msg("ran out of memory after %d items", total);
-    else
-	total++;
+
+  if ((item = calloc(1, sizeof *item)) == NULL)
+    msg("ran out of memory after %d items", total);
+  else
+    total++;
+
 #else
-    item = calloc(1, sizeof *item);
+  item = calloc(1, sizeof *item);
 #endif
-    item->l_next = NULL;
-    item->l_prev = NULL;
-    return item;
+  item->l_next = NULL;
+  item->l_prev = NULL;
+  return item;
 }

@@ -78,16 +78,18 @@ void
 init_check()
 {
 #if defined(MAXLOAD) || defined(MAXUSERS)
-    if (too_much())
-    {
-	printf("Sorry, %s, but the system is too loaded now.\n", whoami);
-	printf("Try again later.  Meanwhile, why not enjoy a%s %s?\n",
-	    vowelstr(fruit), fruit);
-	if (author())
-	    printf("However, since you're a good guy, it's up to you\n");
-	else
-	    exit(1);
-    }
+
+  if (too_much()) {
+    printf("Sorry, %s, but the system is too loaded now.\n", whoami);
+    printf("Try again later.  Meanwhile, why not enjoy a%s %s?\n",
+           vowelstr(fruit), fruit);
+
+    if (author())
+      printf("However, since you're a good guy, it's up to you\n");
+    else
+      exit(1);
+  }
+
 #endif
 }
 
@@ -100,31 +102,31 @@ void
 open_score()
 {
 #ifdef SCOREFILE
-    char *scorefile = SCOREFILE;
-     /* 
-      * We drop setgid privileges after opening the score file, so subsequent 
-      * open()'s will fail.  Just reuse the earlier filehandle. 
-      */
+  char *scorefile = SCOREFILE;
+  /*
+   * We drop setgid privileges after opening the score file, so subsequent
+   * open()'s will fail.  Just reuse the earlier filehandle.
+   */
 
-    if (scoreboard != NULL) { 
-        rewind(scoreboard); 
-        return; 
-    } 
+  if (scoreboard != NULL) {
+    rewind(scoreboard);
+    return;
+  }
 
-    scoreboard = fopen(scorefile, "r+");
+  scoreboard = fopen(scorefile, "r+");
 
-    if ((scoreboard == NULL) && (errno == ENOENT))
-    {
-    	scoreboard = fopen(scorefile, "w+");
-        md_chmod(scorefile,0664);
-    }
+  if ((scoreboard == NULL) && (errno == ENOENT)) {
+    scoreboard = fopen(scorefile, "w+");
+    md_chmod(scorefile,0664);
+  }
 
-    if (scoreboard == NULL) { 
-         fprintf(stderr, "Could not open %s for writing: %s\n", scorefile, strerror(errno)); 
-         fflush(stderr); 
-    } 
+  if (scoreboard == NULL) {
+    fprintf(stderr, "Could not open %s for writing: %s\n", scorefile, strerror(errno));
+    fflush(stderr);
+  }
+
 #else
-    scoreboard = NULL;
+  scoreboard = NULL;
 #endif
 }
 
@@ -137,24 +139,24 @@ void
 setup()
 {
 #ifdef CHECKTIME
-    int  checkout();
+  int  checkout();
 #endif
 
 #ifdef DUMP
-    md_onsignal_autosave();
+  md_onsignal_autosave();
 #else
-    md_onsignal_default();
+  md_onsignal_default();
 #endif
 
 #ifdef CHECKTIME
-    md_start_checkout_timer(CHECKTIME*60);
-    num_checks = 0;
+  md_start_checkout_timer(CHECKTIME*60);
+  num_checks = 0;
 #endif
 
-    raw();				/* Raw mode */
-    noecho();				/* Echo off */
-    keypad(stdscr,1);
-    getltchars();			/* get the local tty chars */
+  raw();				/* Raw mode */
+  noecho();				/* Echo off */
+  keypad(stdscr,1);
+  getltchars();			/* get the local tty chars */
 }
 
 /*
@@ -165,34 +167,34 @@ setup()
 void
 getltchars()
 {
-    got_ltc = TRUE;
-    orig_dsusp = md_dsuspchar();
-    md_setdsuspchar( md_suspchar() );
+  got_ltc = TRUE;
+  orig_dsusp = md_dsuspchar();
+  md_setdsuspchar( md_suspchar() );
 }
 
-/* 
- * resetltchars: 
- *      Reset the local tty chars to original values. 
- */ 
-void 
-resetltchars(void) 
-{ 
-    if (got_ltc) {
-        md_setdsuspchar(orig_dsusp);
-    } 
-} 
-  
-/* 
- * playltchars: 
- *      Set local tty chars to the values we use when playing. 
- */ 
-void 
-playltchars(void) 
-{ 
-    if (got_ltc) { 
-        md_setdsuspchar( md_suspchar() );
-    } 
-} 
+/*
+ * resetltchars:
+ *      Reset the local tty chars to original values.
+ */
+void
+resetltchars(void)
+{
+  if (got_ltc) {
+    md_setdsuspchar(orig_dsusp);
+  }
+}
+
+/*
+ * playltchars:
+ *      Set local tty chars to the values we use when playing.
+ */
+void
+playltchars(void)
+{
+  if (got_ltc) {
+    md_setdsuspchar( md_suspchar() );
+  }
+}
 
 /*
  * start_score:
@@ -203,29 +205,30 @@ void
 start_score()
 {
 #ifdef CHECKTIME
-    md_stop_checkout_timer();
+  md_stop_checkout_timer();
 #endif
 }
 
-/* 	 	 
- * is_symlink: 	 	 
- *      See if the file has a symbolic link 	 	 
-  */ 	 	 
-bool 	 	 
-is_symlink(char *sp) 	 	 
-{ 	 	 
-#ifdef S_IFLNK 	 	 
-    struct stat sbuf2; 	 	 
- 	 	 
-    if (lstat(sp, &sbuf2) < 0) 	 	 
-        return FALSE; 	 	 
-    else 	 	 
-        return ((sbuf2.st_mode & S_IFMT) != S_IFREG); 	 	 
+/*
+ * is_symlink:
+ *      See if the file has a symbolic link
+  */
+bool
+is_symlink(char *sp)
+{
+#ifdef S_IFLNK
+  struct stat sbuf2;
+
+  if (lstat(sp, &sbuf2) < 0)
+    return FALSE;
+  else
+    return ((sbuf2.st_mode & S_IFMT) != S_IFREG);
+
 #else
-	NOOP(sp);
-    return FALSE; 	 	 
-#endif 
-} 
+  NOOP(sp);
+  return FALSE;
+#endif
+}
 
 #if defined(MAXLOAD) || defined(MAXUSERS)
 /*
@@ -236,21 +239,25 @@ bool
 too_much()
 {
 #ifdef MAXLOAD
-    double avec[3];
+  double avec[3];
 #else
-    int cnt;
+  int cnt;
 #endif
 
 #ifdef MAXLOAD
-    md_loadav(avec);
-    if (avec[1] > (MAXLOAD / 10.0))
-	return TRUE;
+  md_loadav(avec);
+
+  if (avec[1] > (MAXLOAD / 10.0))
+    return TRUE;
+
 #endif
 #ifdef MAXUSERS
-    if (ucount() > MAXUSERS)
-	return TRUE;
+
+  if (ucount() > MAXUSERS)
+    return TRUE;
+
 #endif
-    return FALSE;
+  return FALSE;
 }
 
 /*
@@ -261,16 +268,18 @@ bool
 author()
 {
 #ifdef MASTER
-    if (wizard)
-	return TRUE;
+
+  if (wizard)
+    return TRUE;
+
 #endif
-    switch (md_getuid())
-    {
-	case -1:
-	    return TRUE;
-	default:
-	    return FALSE;
-    }
+
+  switch (md_getuid()) {
+    case -1:
+      return TRUE;
+    default:
+      return FALSE;
+  }
 }
 #endif
 
@@ -282,36 +291,34 @@ author()
 
 checkout(int sig)
 {
-    static char *msgs[] = {
-	"The load is too high to be playing.  Please leave in %0.1f minutes",
-	"Please save your game.  You have %0.1f minutes",
-	"Last warning.  You have %0.1f minutes to leave",
-    };
-    int checktime;
+  static char *msgs[] = {
+    "The load is too high to be playing.  Please leave in %0.1f minutes",
+    "Please save your game.  You have %0.1f minutes",
+    "Last warning.  You have %0.1f minutes to leave",
+  };
+  int checktime;
 
-    if (too_much())
-    {
-	if (author())
-	{
-	    num_checks = 1;
-	    chmsg("The load is rather high, O exaulted one");
-	}
-	else if (num_checks++ == 3)
-	    fatal("Sorry.  You took too long.  You are dead\n");
-	checktime = (CHECKTIME * 60) / num_checks;
-	chmsg(msgs[num_checks - 1], ((double) checktime / 60.0));
+  if (too_much()) {
+    if (author()) {
+      num_checks = 1;
+      chmsg("The load is rather high, O exaulted one");
     }
-    else
-    {
-	if (num_checks)
-	{
-	    num_checks = 0;
-	    chmsg("The load has dropped back down.  You have a reprieve");
-	}
-	checktime = (CHECKTIME * 60);
+    else if (num_checks++ == 3)
+      fatal("Sorry.  You took too long.  You are dead\n");
+
+    checktime = (CHECKTIME * 60) / num_checks;
+    chmsg(msgs[num_checks - 1], ((double) checktime / 60.0));
+  }
+  else {
+    if (num_checks) {
+      num_checks = 0;
+      chmsg("The load has dropped back down.  You have a reprieve");
     }
 
-	md_start_checkout_timer(checktime);
+    checktime = (CHECKTIME * 60);
+  }
+
+  md_start_checkout_timer(checktime);
 }
 
 /*
@@ -323,14 +330,13 @@ checkout(int sig)
 
 chmsg(char *fmt, int arg)
 {
-    if (!in_shell)
-	msg(fmt, arg);
-    else
-    {
-	printf(fmt, arg);
-	putchar('\n');
-	fflush(stdout);
-    }
+  if (!in_shell)
+    msg(fmt, arg);
+  else {
+    printf(fmt, arg);
+    putchar('\n');
+    fflush(stdout);
+  }
 }
 #endif
 
@@ -346,21 +352,22 @@ struct utmp buf;
 int
 ucount()
 {
-    struct utmp *up;
-    FILE *utmp;
-    int count;
+  struct utmp *up;
+  FILE *utmp;
+  int count;
 
-    if ((utmp = fopen(UTMP, "r")) == NULL)
-	return 0;
+  if ((utmp = fopen(UTMP, "r")) == NULL)
+    return 0;
 
-    up = &buf;
-    count = 0;
+  up = &buf;
+  count = 0;
 
-    while (fread(up, 1, sizeof (*up), utmp) > 0)
-	if (buf.ut_name[0] != '\0')
-	    count++;
-    fclose(utmp);
-    return count;
+  while (fread(up, 1, sizeof (*up), utmp) > 0)
+    if (buf.ut_name[0] != '\0')
+      count++;
+
+  fclose(utmp);
+  return count;
 }
 #endif
 
@@ -374,58 +381,62 @@ bool
 lock_sc()
 {
 #if defined(SCOREFILE) && defined(LOCKFILE)
-    int cnt;
-    static struct stat sbuf;
-    char *lockfile = LOCKFILE;
+  int cnt;
+  static struct stat sbuf;
+  char *lockfile = LOCKFILE;
 
 over:
-    if ((lfd=fopen(lockfile, "w+")) != NULL)
-	return TRUE;
-    for (cnt = 0; cnt < 5; cnt++)
-    {
-	md_sleep(1);
-	if ((lfd=fopen(lockfile, "w+")) != NULL)
-	    return TRUE;
-    }
-    if (stat(lockfile, &sbuf) < 0)
-    {
-	lfd=fopen(lockfile, "w+");
-	return TRUE;
-    }
-    if (time(NULL) - sbuf.st_mtime > 10)
-    {
-	if (md_unlink(lockfile) < 0)
-	    return FALSE;
-	goto over;
-    }
-    else
-    {
-	printf("The score file is very busy.  Do you want to wait longer\n");
-	printf("for it to become free so your score can get posted?\n");
-	printf("If so, type \"y\"\n");
-	(void) fgets(prbuf, MAXSTR, stdin);
-	if (prbuf[0] == 'y')
-	    for (;;)
-	    {
-		if ((lfd=fopen(lockfile, "w+")) != 0)
-		    return TRUE;
-		if (stat(lockfile, &sbuf) < 0)
-		{
-		    lfd=fopen(lockfile, "w+");
-		    return TRUE;
-		}
-		if (time(NULL) - sbuf.st_mtime > 10)
-		{
-		    if (md_unlink(lockfile) < 0)
-			return FALSE;
-		}
-		md_sleep(1);
-	    }
-	else
-	    return FALSE;
-    }
-#else
+
+  if ((lfd=fopen(lockfile, "w+")) != NULL)
     return TRUE;
+
+  for (cnt = 0; cnt < 5; cnt++) {
+    md_sleep(1);
+
+    if ((lfd=fopen(lockfile, "w+")) != NULL)
+      return TRUE;
+  }
+
+  if (stat(lockfile, &sbuf) < 0) {
+    lfd=fopen(lockfile, "w+");
+    return TRUE;
+  }
+
+  if (time(NULL) - sbuf.st_mtime > 10) {
+    if (md_unlink(lockfile) < 0)
+      return FALSE;
+
+    goto over;
+  }
+  else {
+    printf("The score file is very busy.  Do you want to wait longer\n");
+    printf("for it to become free so your score can get posted?\n");
+    printf("If so, type \"y\"\n");
+    (void) fgets(prbuf, MAXSTR, stdin);
+
+    if (prbuf[0] == 'y')
+      for (;;) {
+        if ((lfd=fopen(lockfile, "w+")) != 0)
+          return TRUE;
+
+        if (stat(lockfile, &sbuf) < 0) {
+          lfd=fopen(lockfile, "w+");
+          return TRUE;
+        }
+
+        if (time(NULL) - sbuf.st_mtime > 10) {
+          if (md_unlink(lockfile) < 0)
+            return FALSE;
+        }
+
+        md_sleep(1);
+      }
+    else
+      return FALSE;
+  }
+
+#else
+  return TRUE;
 #endif
 }
 
@@ -438,10 +449,12 @@ void
 unlock_sc()
 {
 #if defined(SCOREFILE) && defined(LOCKFILE)
-    if (lfd != NULL)
-        fclose(lfd);
-    lfd = NULL;
-    md_unlink(LOCKFILE);
+
+  if (lfd != NULL)
+    fclose(lfd);
+
+  lfd = NULL;
+  md_unlink(LOCKFILE);
 #endif
 }
 
@@ -453,5 +466,5 @@ unlock_sc()
 void
 flush_type()
 {
-    flushinp();
+  flushinp();
 }

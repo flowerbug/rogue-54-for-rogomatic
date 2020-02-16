@@ -116,10 +116,10 @@ MISC_C   = findpw.c scedit.c scmisc.c
 DOCSRC   = rogue.me.in rogue.6.in rogue.doc.in rogue.html.in rogue.cat.in
 DOCS     = $(PROGRAM).doc $(PROGRAM).html $(PROGRAM).cat $(PROGRAM).me \
            $(PROGRAM).6
-AFILES   = configure Makefile.in configure.ac config.h.in config.sub config.guess \
+AFILES   = bootstrap configure Makefile.in configure.ac config.h.in config.sub config.guess \
            install-sh rogue.6.in rogue.me.in rogue.html.in rogue.doc.in rogue.cat.in
-MISC     = Makefile.std LICENSE.TXT rogue54.sln rogue54.vcproj rogue.spec \
-           rogue.png rogue.desktop
+MISC     = README TODO Makefile.std LICENSE.TXT \
+           rogue54.sln rogue54.vcproj rogue.spec rogue.png rogue.desktop
 
 .SUFFIXES: .obj
 
@@ -136,16 +136,21 @@ clean:
 	$(RM) $(OBJS1)
 	$(RM) $(OBJS2)
 	$(RM) core a.exe a.out a.exe.stackdump $(PROGRAM) $(PROGRAM).exe
+	$(RM) $(PROGRAM).scr
 	$(RM) $(PROGRAM).tar $(PROGRAM).tar.gz $(PROGRAM).zip 
+	$(RM) $(DISTNAME)-*.tar $(DISTNAME)-*.tar.gz
+	$(RM) $(DOCS)
 	$(RM) $(DISTNAME)/*
 	-if test -d $(DISTNAME) ; then rmdir $(DISTNAME) ; fi
     
 maintainer-clean:
 	$(RM) config.h
+	$(RM) config.h.in config.h.in~
+	$(RM) configure
 	$(RM) Makefile
-	$(RM) config.status
 	$(RM) -r autom4te.cache
-	$(RM) config.log
+	$(RM) config.log config.status
+	$(RM) $(DOCS)
 	$(RM) $(PROGRAM).scr $(PROGRAM).lck
 
 stddocs:
@@ -158,9 +163,11 @@ stddocs:
 dist.src:
 	$(MAKE) $(MAKEFILE) clean
 	mkdir $(DISTNAME)
-	cp $(CFILES) $(HDRS) $(MISC) $(AFILES) $(DISTNAME)
+	cp -a $(CFILES) $(HDRS) $(MISC) $(AFILES) $(DISTNAME)
 	tar cf $(DISTNAME)-src.tar $(DISTNAME)
 	gzip -f $(DISTNAME)-src.tar
+	cp -a .git $(DISTNAME)
+	tar cf $(DISTNAME)-src-git.tar.gz $(DISTNAME)
 	rm -fr $(DISTNAME)
 
 findpw: findpw.c xcrypt.o mdport.o xcrypt.o
