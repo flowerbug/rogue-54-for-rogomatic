@@ -1,7 +1,4 @@
-Sat 15 Feb 2020 10:26:19 PM EST
-
-
-# Some History
+# Rogue
 
   Rogue is an ancient computer game that I had spent way too much time playing back in the 1980s.
 
@@ -31,4 +28,15 @@ https://code.google.com/archive/p/rogomatic/
 
   I am not working on Rogue much the past few years but the code is still being downloaded enough from my website that it should have a more public home.
 
-  I have not yet applied all my changes to the master branch and I am not sure when I might do that.  Instead I will create next-version branches as I get time.  The most recent I have pushed.  My website http://www.anthive.com/project/rogue/ has the most recent version and a few back from the current one (5.4.4-ant-1.1.4) for download as tar.gz files.
+
+  The version of rogomatic that I'm working with to test Rogue is at
+
+  https://github.com/flowerbug/rogomatic
+
+
+  My website for both Rogue and Rogomatic is at
+
+  http://www.anthive.com/project/rogue/
+
+
+Sat 22 Feb 2020 06:15:27 PM EST
