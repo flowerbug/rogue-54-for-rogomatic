@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.56)
-AC_INIT([Rogue],[5.4.4-rgm], [yendor@rogueforge.net])
+AC_INIT([Rogue],[5.4.4-ant-r1.1.4], [ant@anthive.com])
 AC_CONFIG_SRCDIR([armor.c])
 AC_CONFIG_HEADER([config.h])
 AC_CONFIG_FILES([Makefile rogue.6 rogue.cat rogue.doc rogue.html rogue.me])

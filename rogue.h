@@ -12,7 +12,7 @@
 
 #include "extern.h"
 
-#undef lines 
+#undef lines
 
 #define NOOP(x) (x += 0)
 #define CCHAR(x) ( (char) (x & A_CHARTEXT) )
@@ -49,9 +49,6 @@
 /*
  * All the fun defines
  */
-#define when		break;case
-#define otherwise	break;default
-#define until(expr)	while(!(expr))
 #define next(ptr)	(*ptr).l_next
 #define prev(ptr)	(*ptr).l_prev
 #define winat(y,x)	(moat(y,x) != NULL ? moat(y,x)->t_disguise : chat(y,x))
@@ -315,17 +312,17 @@
  * Help list
  */
 struct h_list {
-    char h_ch;
-    char *h_desc;
-    bool h_print;
+  char h_ch;
+  char *h_desc;
+  bool h_print;
 };
 
 /*
  * Coordinate data type
  */
 typedef struct {
-    int x;
-    int y;
+  int x;
+  int y;
 } coord;
 
 typedef unsigned int str_t;
@@ -334,75 +331,75 @@ typedef unsigned int str_t;
  * Stuff about objects
  */
 struct obj_info {
-    char *oi_name;
-    int oi_prob;
-    int oi_worth;
-    char *oi_guess;
-    bool oi_know;
+  char *oi_name;
+  int oi_prob;
+  int oi_worth;
+  char *oi_guess;
+  bool oi_know;
 };
 
 /*
  * Room structure
  */
 struct room {
-    coord r_pos;			/* Upper left corner */
-    coord r_max;			/* Size of room */
-    coord r_gold;			/* Where the gold is */
-    int r_goldval;			/* How much the gold is worth */
-    short r_flags;			/* info about the room */
-    int r_nexits;			/* Number of exits */
-    coord r_exit[12];			/* Where the exits are */
+  coord r_pos;			/* Upper left corner */
+  coord r_max;			/* Size of room */
+  coord r_gold;			/* Where the gold is */
+  int r_goldval;			/* How much the gold is worth */
+  short r_flags;			/* info about the room */
+  int r_nexits;			/* Number of exits */
+  coord r_exit[12];			/* Where the exits are */
 };
 
 /*
  * Structure describing a fighting being
  */
 struct stats {
-    str_t s_str;			/* Strength */
-    int s_exp;				/* Experience */
-    int s_lvl;				/* level of mastery */
-    int s_arm;				/* Armor class */
-    int s_hpt;			/* Hit points */
-    char s_dmg[13];			/* String describing damage done */
-    int  s_maxhp;			/* Max hit points */
+  str_t s_str;			/* Strength */
+  int s_exp;				/* Experience */
+  int s_lvl;				/* level of mastery */
+  int s_arm;				/* Armor class */
+  int s_hpt;			/* Hit points */
+  char s_dmg[13];			/* String describing damage done */
+  int  s_maxhp;			/* Max hit points */
 };
 
 /*
  * Structure for monsters and player
  */
 union thing {
-    struct {
-	union thing *_l_next, *_l_prev;	/* Next pointer in link */
-	coord _t_pos;			/* Position */
-	bool _t_turn;			/* If slowed, is it a turn to move */
-	char _t_type;			/* What it is */
-	char _t_disguise;		/* What mimic looks like */
-	char _t_oldch;			/* Character that was where it was */
-	coord *_t_dest;			/* Where it is running to */
-	short _t_flags;			/* State word */
-	struct stats _t_stats;		/* Physical description */
-	struct room *_t_room;		/* Current room for thing */
-	union thing *_t_pack;		/* What the thing is carrying */
-        int _t_reserved;
-    } _t;
-    struct {
-	union thing *_l_next, *_l_prev;	/* Next pointer in link */
-	int _o_type;			/* What kind of object it is */
-	coord _o_pos;			/* Where it lives on the screen */
-	char *_o_text;			/* What it says if you read it */
-	int  _o_launch;			/* What you need to launch it */
-	char _o_packch;			/* What character it is in the pack */
-	char _o_damage[8];		/* Damage if used like sword */
-	char _o_hurldmg[8];		/* Damage if thrown */
-	int _o_count;			/* count for plural objects */
-	int _o_which;			/* Which object of a type it is */
-	int _o_hplus;			/* Plusses to hit */
-	int _o_dplus;			/* Plusses to damage */
-	int _o_arm;			/* Armor protection */
-	int _o_flags;			/* information about objects */
-	int _o_group;			/* group number for this object */
-	char *_o_label;			/* Label for object */
-    } _o;
+  struct {
+    union thing *_l_next, *_l_prev;	/* Next pointer in link */
+    coord _t_pos;			/* Position */
+    bool _t_turn;			/* If slowed, is it a turn to move */
+    char _t_type;			/* What it is */
+    char _t_disguise;		/* What mimic looks like */
+    char _t_oldch;			/* Character that was where it was */
+    coord *_t_dest;			/* Where it is running to */
+    short _t_flags;			/* State word */
+    struct stats _t_stats;		/* Physical description */
+    struct room *_t_room;		/* Current room for thing */
+    union thing *_t_pack;		/* What the thing is carrying */
+    int _t_reserved;
+  } _t;
+  struct {
+    union thing *_l_next, *_l_prev;	/* Next pointer in link */
+    int _o_type;			/* What kind of object it is */
+    coord _o_pos;			/* Where it lives on the screen */
+    char *_o_text;			/* What it says if you read it */
+    int  _o_launch;			/* What you need to launch it */
+    char _o_packch;			/* What character it is in the pack */
+    char _o_damage[8];		/* Damage if used like sword */
+    char _o_hurldmg[8];		/* Damage if thrown */
+    int _o_count;			/* count for plural objects */
+    int _o_which;			/* Which object of a type it is */
+    int _o_hplus;			/* Plusses to hit */
+    int _o_dplus;			/* Plusses to damage */
+    int _o_arm;			/* Armor protection */
+    int _o_flags;			/* information about objects */
+    int _o_group;			/* group number for this object */
+    char *_o_label;			/* Label for object */
+  } _o;
 };
 
 typedef union thing THING;
@@ -442,19 +439,19 @@ typedef union thing THING;
  * describe a place on the level map
  */
 typedef struct {
-    char p_ch;
-    char p_flags;
-    THING *p_monst;
+  char p_ch;
+  char p_flags;
+  THING *p_monst;
 } PLACE;
 
 /*
  * Array containing information on all the various types of monsters
  */
 struct monster {
-    char *m_name;			/* What to call the monster */
-    int m_carry;			/* Probability of carrying something */
-    short m_flags;			/* things about the monster */
-    struct stats m_stats;		/* Initial stats */
+  char *m_name;			/* What to call the monster */
+  int m_carry;			/* Probability of carrying something */
+  short m_flags;			/* things about the monster */
+  struct stats m_stats;		/* Initial stats */
 };
 
 /*
@@ -462,20 +459,20 @@ struct monster {
  */
 
 extern bool	after, again, allscore, amulet, door_stop, fight_flush,
-		firstmove, has_hit, inv_describe, jump, kamikaze,
-		lower_msg, move_on, msg_esc, pack_used[],
-		passgo, playing, q_comm, running, save_msg, see_floor,
-		seenstairs, stat_msg, terse, to_death, tombstone;
+       firstmove, has_hit, inv_describe, jump, kamikaze,
+       lower_msg, move_on, msg_esc, pack_used[],
+       passgo, playing, q_comm, running, save_msg, see_floor,
+       seenstairs, stat_msg, terse, to_death, tombstone;
 
 extern char	dir_ch, file_name[], home[], huh[], *inv_t_name[],
-		l_last_comm, l_last_dir, last_comm, last_dir, *Numname,
-		outbuf[], *p_colors[], *r_stones[], *release, runch,
-		*s_names[], take, *tr_name[], *ws_made[], *ws_type[];
+       l_last_comm, l_last_dir, last_comm, last_dir, *Numname,
+       outbuf[], *p_colors[], *r_stones[], *release, runch,
+       *s_names[], take, *tr_name[], *ws_made[], *ws_type[];
 
 extern int	a_class[], count, food_left, hungry_state, inpack,
-		inv_type, lastscore, level, max_hit, max_level, mpos,
-		n_objs, no_command, no_food, no_move, noscore, ntraps, purse,
-		quiet, vf_hit;
+        inv_type, lastscore, level, max_hit, max_level, mpos,
+        n_objs, no_command, no_food, no_move, noscore, ntraps, purse,
+        quiet, vf_hit;
 
 extern unsigned int	numscores;
 
@@ -488,7 +485,7 @@ extern coord	delta, oldpos, stairs;
 extern PLACE	places[];
 
 extern THING	*cur_armor, *cur_ring[], *cur_weapon, *l_last_pick,
-		*last_pick, *lvl_obj, *mlist, player;
+        *last_pick, *lvl_obj, *mlist, player;
 
 extern struct h_list	helpstr[];
 
@@ -499,7 +496,7 @@ extern struct stats	max_stats;
 extern struct monster	monsters[];
 
 extern struct obj_info	arm_info[], pot_info[], ring_info[],
-			scr_info[], things[], ws_info[], weap_info[];
+    scr_info[], things[], ws_info[], weap_info[];
 
 /*
  * Function types
@@ -681,7 +678,7 @@ bool	dropcheck(THING *obj);
 bool	fallpos(coord *pos, coord *newpos);
 bool	find_floor(struct room *rp, coord *cp, int limit, bool monst);
 bool	is_magic(THING *obj);
-bool    is_symlink(char *sp); 
+bool    is_symlink(char *sp);
 bool	levit_check();
 bool	pack_room(bool from_floor, THING *obj);
 bool	roll_em(THING *thatt, THING *thdef, THING *weap, bool hurl);
@@ -728,15 +725,15 @@ struct room	*roomin(coord *cp);
 #define MAXDAEMONS 20
 
 extern struct delayed_action {
-    int d_type;
-    void (*d_func)();
-    int d_arg;
-    int d_time;
+  int d_type;
+  void (*d_func)();
+  int d_arg;
+  int d_time;
 } d_list[MAXDAEMONS];
 
 typedef struct {
-    char	*st_name;
-    int		st_value;
+  char	*st_name;
+  int		st_value;
 } STONE;
 
 extern int      total;
