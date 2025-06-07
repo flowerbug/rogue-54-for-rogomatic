@@ -44,8 +44,6 @@
 #undef MOUSE_MOVED
 #endif
 
-#define NCURSES_INTERNALS
-
 #include <curses.h>
 #include "extern.h"
 
